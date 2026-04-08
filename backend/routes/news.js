@@ -14,8 +14,14 @@ const { deleteFile } = require('../lib/storage')
 
 const VALID_CATEGORIES_AR = ['أخبار', 'فعاليات', 'مشاريع', 'دراسات', 'إعلانات', 'تقارير']
 const VALID_CATEGORIES_EN = ['News', 'Events', 'Projects', 'Studies', 'Announcements', 'Reports']
-router.get('/ping', (req, res) => {
-  res.status(200).send('pong');
+router.get('/ping', async (req, res) => {
+  try {
+    await db.query('SELECT 1'); 
+    res.status(200).send('pong');
+  } catch (error) {
+    console.error('Ping database error:', error);
+    res.status(200).send('Render is awake, but DB had an issue');
+  }
 });
 // GET /api/news  (public — published only)
 router.get('/', async (req, res) => {
