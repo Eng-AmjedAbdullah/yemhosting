@@ -10,9 +10,7 @@ const router  = require('express').Router()
 const bcrypt  = require('bcryptjs')
 const db      = require('../lib/db')
 const auth    = require('../middleware/auth')
-router.get('/ping', (req, res) => {
-  res.status(200).send('pong');
-});
+
 // Helper: restrict route to super_admin only
 function superAdminOnly(req, res, next) {
   if (req.admin.role !== 'super_admin') {
