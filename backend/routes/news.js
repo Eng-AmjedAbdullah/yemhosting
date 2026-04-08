@@ -14,7 +14,9 @@ const { deleteFile } = require('../lib/storage')
 
 const VALID_CATEGORIES_AR = ['أخبار', 'فعاليات', 'مشاريع', 'دراسات', 'إعلانات', 'تقارير']
 const VALID_CATEGORIES_EN = ['News', 'Events', 'Projects', 'Studies', 'Announcements', 'Reports']
-
+router.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
 // GET /api/news  (public — published only)
 router.get('/', async (req, res) => {
   try {
