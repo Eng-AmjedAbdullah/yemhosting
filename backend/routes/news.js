@@ -69,13 +69,13 @@ router.get('/:id', async (req, res) => {
 // POST /api/news  (admin)
 router.post('/', auth, async (req, res) => {
   try {
-    const { title, title_en, content, content_en, category, category_en, image_url, published } = req.body
+    const { title, title_en, content, content_en, category, category_en, image_url, published, created_at } = req.body
     if (!title) return res.status(400).json({ error: 'العنوان مطلوب' })
     const [result] = await db.query(
-      'INSERT INTO news (title,title_en,content,content_en,category,category_en,image_url,published) VALUES (?,?,?,?,?,?,?,?)',
+      'INSERT INTO news (title,title_en,content,content_en,category,category_en,image_url,published,created_at) VALUES (?,?,?,?,?,?,?,?,?)',
       [title, title_en||null, content||null, content_en||null,
        category||'أخبار', category_en||'News', image_url||null,
-       published !== false ? 1 : 0]
+       published !== false ? 1 : 0, created_at||null]
     )
     res.status(201).json({ id: result.insertId, message: 'تم الإضافة' })
   } catch { res.status(500).json({ error: 'خطأ في الخادم' }) }
@@ -84,13 +84,13 @@ router.post('/', auth, async (req, res) => {
 // PUT /api/news/:id  (admin)
 router.put('/:id', auth, async (req, res) => {
   try {
-    const { title, title_en, content, content_en, category, category_en, image_url, published } = req.body
+    const { title, title_en, content, content_en, category, category_en, image_url, published, created_at } = req.body
     if (!title) return res.status(400).json({ error: 'العنوان مطلوب' })
     await db.query(
-      'UPDATE news SET title=?,title_en=?,content=?,content_en=?,category=?,category_en=?,image_url=?,published=?,updated_at=NOW() WHERE id=?',
+      'UPDATE news SET title=?,title_en=?,content=?,content_en=?,category=?,category_en=?,image_url=?,published=?,created_at=?,updated_at=NOW() WHERE id=?',
       [title, title_en||null, content||null, content_en||null,
        category||'أخبار', category_en||'News', image_url||null,
-       published !== false ? 1 : 0, req.params.id]
+       published !== false ? 1 : 0, created_at||null, req.params.id]
     )
     res.json({ message: 'تم التحديث' })
   } catch { res.status(500).json({ error: 'خطأ في الخادم' }) }
