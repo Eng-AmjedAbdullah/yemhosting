@@ -16,6 +16,7 @@ const EMPTY = {
   category_en: 'News',
   image_url: '',
   published: true,
+  created_at: '',
 }
 
 export default function ManageNews() {
@@ -63,7 +64,9 @@ export default function ManageNews() {
 
     if (statusFilter !== 'all') {
       filtered = filtered.filter((item) =>
-        statusFilter === 'published' ? isPublished(item.published) : !isPublished(item.published)
+        statusFilter === 'published'
+          ? isPublished(item.published)
+          : !isPublished(item.published)
       )
     }
 
@@ -86,6 +89,7 @@ export default function ManageNews() {
       category_en: item.category_en || 'News',
       image_url: item.image_url || '',
       published: isPublished(item.published),
+      created_at: item.created_at ? item.created_at.split('T')[0] : '',
     })
     setEditId(item.id)
     setModal('form')
@@ -102,6 +106,10 @@ export default function ManageNews() {
       const payload = {
         ...form,
         published: !!form.published,
+      }
+
+      if (!editId) {
+        delete payload.created_at
       }
 
       if (editId) {
@@ -291,7 +299,9 @@ export default function ManageNews() {
                   </td>
 
                   <td className="p-4 text-xs text-gray-400">
-                    {new Date(item.created_at).toLocaleDateString(isRtl ? 'ar-YE' : 'en-US')}
+                    {item.created_at
+                      ? new Date(item.created_at).toLocaleDateString(isRtl ? 'ar-YE' : 'en-US')
+                      : '-'}
                   </td>
 
                   <td className="p-4">
@@ -370,6 +380,20 @@ export default function ManageNews() {
                   />
                 </div>
               </div>
+
+              {editId && (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    {t.date}
+                  </label>
+                  <input
+                    type="date"
+                    value={form.created_at}
+                    onChange={(e) => setForm({ ...form, created_at: e.target.value })}
+                    className="input-field"
+                  />
+                </div>
+              )}
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
